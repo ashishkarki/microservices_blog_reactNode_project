@@ -8,6 +8,7 @@ import PostList from './PostList'
 
 function App() {
   const [posts, setPosts] = useState({})
+  const [commentsByPostId, setCommentsByPostId] = useState({})
   const [status, setStatus] = useState('')
 
   useEffect(() => {
@@ -25,11 +26,29 @@ function App() {
       title,
     })
 
-    setStatus(`Post ${getReasonPhrase(result.status)}`)
+    setStatus(`Post: ${getReasonPhrase(result.status)}`)
 
     if (result.status === StatusCodes.CREATED) {
       const { post } = result.data
       setPosts({ ...posts, [post.id]: post })
+    }
+  }
+
+  const onCommentCreate = async (postId, content) => {
+    const result = await axios.post(
+      `http://localhost:5001/posts/${postId}/comments`,
+      {
+        content,
+      }
+    )
+
+    if (result.status === StatusCodes.CREATED) {
+      const comments = commentsByPostId[postId] || []
+      comments.push({
+        id: result.newComment.id,
+        content,
+      })
+      setCommentsByPostId({ ...commentsByPostId, [postId]: comments })
     }
   }
 
@@ -43,7 +62,12 @@ function App() {
       />
 
       <hr />
-      <PostList posts={posts} />
+      <PostList
+        posts={posts}
+        handleCommentCreate={(postId, content) =>
+          onCommentCreate(postId, content)
+        }
+      />
     </div>
   )
 }
