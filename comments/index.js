@@ -30,15 +30,16 @@ app.post('/posts/:postId/comments', (req, res) => {
   const { content } = req.body
 
   const comments = commentsByPostId[postId] || []
-  comments.push({
+  const newComment = {
     id: commentId,
     content,
-  })
+  }
+  comments.push(newComment)
   commentsByPostId[postId] = comments
 
   res.status(StatusCodes.CREATED).json({
     postId,
-    comments: commentsByPostId[postId],
+    newComment,
   })
 })
 
