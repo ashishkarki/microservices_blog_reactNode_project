@@ -1,9 +1,10 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
+import axios from 'axios'
 
-function PostCreate({ status, handlePostCreate }) {
-  const [title, setTitle] = useState('')
+function CommentCreate({ postId, handleCommentCreate }) {
+  const [content, setContent] = useState('')
 
   return (
     <div className='pl-3 mt-3'>
@@ -12,30 +13,26 @@ function PostCreate({ status, handlePostCreate }) {
       <Form
         onSubmit={(e) => {
           e.preventDefault()
-          handlePostCreate(title)
-          setTitle('')
+          handleCommentCreate(content)
+          setContent('')
         }}
       >
         <Form.Group className='mb-3' controlId='postTitle'>
-          <Form.Label>Post Title</Form.Label>
+          <Form.Label>Add New Comment:</Form.Label>
           <Form.Control
             type='text'
-            placeholder='Give your post a title'
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            placeholder={`Comment on post: ${postId}`}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
         </Form.Group>
 
         <Button variant='primary' type='submit'>
-          Submit
+          Submit Comment
         </Button>
       </Form>
-
-      <div className='mt-3 font-bold'>
-        <p>{status}</p>
-      </div>
     </div>
   )
 }
 
-export default PostCreate
+export default CommentCreate
